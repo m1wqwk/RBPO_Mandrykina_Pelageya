@@ -1,0 +1,17 @@
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"
+    
+stages:
+  - build
+
+build-job: 
+  stage: build 
+  tags:
+    - sass-linux-small-amd64 
+  image: eclipse-temurin:21-jdk 
+  script:
+    - mvn clean compile test package
+  artifacts:
+    paths:
+      - ./target/*.jar
