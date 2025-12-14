@@ -1,0 +1,28 @@
+name: GitHub CI
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: eclipse-temurin:21-jdk
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Ensure mvnw executable
+        run: chmod +x mvnw || true
+
+      - name: Build project
+        run: ./mvnw clean package -DskipTests=false || mvn clean package -DskipTests=false
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-jar
+          path: ./target/*.jar
